@@ -21,6 +21,14 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
+/*collect(scandir(__DIR__ . '/../config'))->each(function ($item) use ($app) {
+    if(strpos($item,"php")!=false){
+        $app->configure(basename($item, '.php'));
+    }
+    
+});
+*/
+
  $app->withFacades();
 
  $app->withEloquent();
