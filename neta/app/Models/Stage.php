@@ -11,14 +11,14 @@ class Stage {
     protected $width;
     protected $height;
     protected $backgroundColor;
-    function __construct($w,$h,$canvas=null)
+    function __construct($stage_props)
     {
-        $this->backgroundColor = "#ffffff";
-        $this->width = $w;
-        $this->height = $h;
-        $this->canvas = isset($canvas)? $canvas: imagecreatetruecolor($this->width, $this->height); 
+        $this->backgroundColor = isset($stage_props["background"])? $stage_props["background"]: "#ffffff";
+        $this->width = isset($stage_props["width"])? $stage_props["width"] : 900;
+        $this->height = isset($stage_props["height"])? $stage_props["height"]: 400;
+        $this->canvas = imagecreatetruecolor($this->width, $this->height); 
         $this->clear();
-    }
+    } 
     public function clear(){
         $this->shapes = [];
     }

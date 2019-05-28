@@ -19,18 +19,25 @@ class ShapeController extends Controller
             "server"=> "renderer_server",
             "client"=> "renderer_client",
             "client_oop"=> "renderer_client_js_oop",
+            "client_oop_svg"=> "renderer_client_svg_oop"
     ];
     $view_template = 'frontend.'.$view_templates[$rendering_side];
+    $stage_props = [
+        "width"=> env("STAGE_WIDTH"),
+        "height"=> env("STAGE_HEIGHT"),
+        "background"=> "#".env("STAGE_BACKGROUND"),
+        
+    ];
     switch($format)
     {
         case "binary":
              	    if($rendering_side=="server"){
-                        $stage = new Stage(900,400);
+                        $stage = new Stage($stage_props);
                         $stage->parse($data);
                         $stage->render();
                         return response(view($view_template,["img"=> $stage->export($format)]));
                     } else{
-                        return response(view($view_template,["data"=>json_encode($data)]));
+                        return response(view($view_template,["data"=>json_encode($data),"stage_props"=>json_encode($stage_props)]));
                     }
             break;
         case "array":

@@ -9,6 +9,7 @@ class Shape implements ShapeInterface{
                 'x'=> 0,
                 'y'=> 0,
                 'border'=> array('color'=>'#000','width'=>1),
+                'fill'=> array('color'=>'','type'=>'solid'),
                 'width'=>0,
                 'height'=>0,
                 'type'=>'',    
@@ -54,7 +55,9 @@ class Shape implements ShapeInterface{
         }
         $this->canvas = $canvas;
         $this->border_color = $this->hexToAllocatedColor($this->canvas,$this->border->color);
-        $this->border_width = $this->border->width;
+        $this->border_width = isset($this->border->width)?$this->border->width : 1;
+        $this->fill_color = !empty($this->fill->color)? $this->hexToAllocatedColor($this->canvas,$this->fill->color) :"";
+        $this->fill_type = !empty($this->fill->type)? $this->fill->type : "solid";
         imagesetthickness($this->canvas,$this->border_width);
         $this->renderShapes();
         
@@ -65,14 +68,35 @@ class Shape implements ShapeInterface{
         {
             case "circle":
                 $this->width = $this->height = 2 * ($this->perimeter / (2 * pi()));
-                imageellipse($this->canvas, $this->x, $this->y, $this->width,$this->height,$this->border_color);
+                if($this->fill_type=="solid" ){
+                    imagefilledellipse($this->canvas, $this->x+($this->width/2), $this->y+($this->height/2), $this->width,$this->height,$this->fill_color);
+                }
+                imageellipse($this->canvas, $this->x+($this->width/2), $this->y+($this->height/2), $this->width,$this->height,$this->border_color);
                 break;
             case "rectangle":
+                if($this->fill_type=="solid" ){
+                    imagefilledrectangle($this->canvas, $this->x, $this->y, $this->x+$this->width, $this->y+$this->height, $this->fill_color);
+                }
                 imagerectangle($this->canvas, $this->x, $this->y, $this->x+$this->width, $this->y+$this->height, $this->border_color);
                 break;
             case "square":
+                if($this->fill_type=="solid" ){
+                    imagefilledrectangle($this->canvas, $this->x, $this->y, $this->x+$this->sideLength, $this->y+$this->sideLength, $this->fill_color);
+                }
                 imagerectangle($this->canvas, $this->x, $this->y, $this->x+$this->sideLength, $this->y+$this->sideLength, $this->border_color);
                 $this->width = $this->height = $this->sideLength;
+            break;
+            case "polygon":
+                $points = [];
+                for($a = 0;$a <= 360; $a += 360/$this->sides)
+                {
+                    $points[] = $this->x + ($this->size) * cos(deg2rad($a));
+                    $points[] = $this->y + ($this->size) * sin(deg2rad($a));
+                }
+                if($this->fill_type=="solid" ){
+                    imagefilledpolygon($this->canvas,$points,$this->sides,$this->fill_color);
+                }
+                imagepolygon($this->canvas,$points,$this->sides,$this->border_color);
             break;
         }
         
