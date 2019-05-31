@@ -2,9 +2,17 @@
 namespace App\Models;
 use Exception;
 use App\Models\Colorable;
+/**
+* Class Shape
+* 
+* Shape Class represents, parses shape data, and renders the shape on a canvas owned by a stage.  
+* @package App\Models
+*/
 class Shape implements ShapeInterface{
+    //uses colorable for hex/color names conversions.
     use Colorable;
     protected $canvas;
+    //defined default attributes for any shape
     const DEFAULT_ATTRIBS = [
                 'x'=> 0,
                 'y'=> 0,
@@ -13,20 +21,23 @@ class Shape implements ShapeInterface{
                 'width'=>0,
                 'height'=>0,
                 'type'=>'',    
-                
         ];
+    //this is the attributes objects where all the properties will be stored.
     protected $attributes;
+    /**
+     * Shape Class constructor.
+     *
+     * @param $canvas 
+     *
+     */
     public function __construct($canvas=null){
         $this->attributes = self::DEFAULT_ATTRIBS;
         $this->canvas = $canvas;
     }
-    
-    
     /**
      * Parses the shape attribute data provided by Stage.
      *
      * @param Canvas $data 
-     *
      * @throws NullAttributeException
      *
      */
@@ -40,12 +51,8 @@ class Shape implements ShapeInterface{
     }
     /**
      * Renders the shape on the canvas provided.
-     *
      * @param Canvas $canvas 
-     *
-     * @return Response
-     *
-     * @throws CanvasNotFoundException
+     * @throws CanvasNotFoundException if no canvas provided.
      *
      */
     public function render($canvas){
@@ -62,6 +69,10 @@ class Shape implements ShapeInterface{
         $this->renderShapes();
         
     }
+    /**
+     * Renders any shape, this can be further extended to be sub classes that manage different shapes of more complex way.
+     *
+     */
     protected function renderShapes()
     {
         switch($this->type)
@@ -101,10 +112,21 @@ class Shape implements ShapeInterface{
         }
         
     }
+    /**
+     * Magic setter is used to handle all attribute setting on shape class instance to be set on attributes object instead..
+     *
+     * @param $key the key attribute to set
+     * @param $value the value of the attribute to set
+     */
      function __set($key, $val) {
          $this->attributes[$key]=$val;
          
      }
+    /**
+     * Magic getter is used to handle all attribute getting from a shape instance to be get from attributes object instead..
+     *
+     * @param $key the key attribute to get
+     */
      function __get($key){
          if(isset($this->attributes[$key]))
          {
@@ -114,11 +136,6 @@ class Shape implements ShapeInterface{
              
              throw new Exception("Property '".$key."' not found on Shape Array");
          }
-         
-         
      }
-    
-    
 }
-
 ?>

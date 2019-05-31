@@ -1,5 +1,6 @@
 <?php
-
+session_start();
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,14 +12,12 @@
 |
 */
 
-/*$router->get('/', function () use ($router) {
-    return $router->app->version();
-
-});
-*/
 $router->group(['prefix' => 'shapes'], function () use ($router) {
+    //route to json test form 
     $router->get('/', ['as'=>'shapes.index', 'uses'=>'ShapeController@index']);
-    $router->post('render', ['as'=>'shapes.render', 'uses'=>'ShapeController@render']);
+    //route to rendering endpoint
+    $router->post('render', ['as'=>'shapes.render','uses'=>'ShapeController@render']);
+    
 });
 
 

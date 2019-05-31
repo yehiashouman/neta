@@ -1,3 +1,15 @@
+    /**
+    * @class Stage 
+    *
+    * Stage class is used to represent the stage svg/canvas where all the rendering takes place
+    * @param {string} canvas_id - HTML element id of the SVG element
+    * @param {string} w configuration width of the svg canvas
+    * @param {string} h configuration height of the svg canvas
+    * @param {string} background configuration background color of the svg node canvas
+    *
+    * @example
+    *   new Stage("mySVG",900,400,"#d2d2d2");
+    */
     function Stage(canvas_id,w,h,background)
     {
         this.width = w? w : 900;
@@ -6,14 +18,24 @@
         this.shapes = [];
         this.svg = document.getElementById(canvas_id);
         this.svgNS = "http://www.w3.org/2000/svg";
+        //set the width and height of the svg node.
         this.svg.setAttribute("width",this.width+"px");
         this.svg.setAttribute("height",this.height+"px");
         this.svg.style.height = this.height;
 
     }
+    /**
+    * Clears the shapes array.
+    *
+    */
     Stage.prototype.clear = function(){
         this.shapes = [];
     }
+    /**
+    * Parses an array of shapes.
+    *
+    * @param {string} data - an array of shapes
+    */
     Stage.prototype.parse=function(data){
         for(var shape_data_key in data.shapes)
         {
@@ -22,6 +44,10 @@
             this.shapes.push(shape);
         }
     }
+    /**
+    * Renders an array of shapes.
+    *
+    */
     Stage.prototype.render=function()
     {
         while (this.svg.lastChild) {
@@ -34,17 +60,36 @@
         }        
         
     }
+    /**
+    * @class Shape 
+    *
+    * Shape class is used to represent the individual shapes being rendered 
+    * @param {string} svg - SVG node where it will be drawn
+    *
+    * @example
+    *   var shape = new Shape(svg);
+    */
     
     function Shape(svg){
         this.svg = svg;
         this.attributes = [];
         this.svgNS = "http://www.w3.org/2000/svg";
     }
+    /**
+    * Parses shape attributes.
+    *
+    * @param {string} data the shape draw to draw
+    */
     Shape.prototype.parse= function(data)
     {
         this.attributes=data;
     }
-    Shape.prototype.render= function(canvas){
+    /**
+    * Renders shape.
+    *
+    * @param {string} svg - SVG node to render the shape on
+    */
+    Shape.prototype.render= function(svg){
         if(!this.svg){
             throw Error("SVG Element Not Found");
         }
@@ -56,10 +101,15 @@
         this.renderShape();
         
     }
+    /**
+    * Generic shape rendering. Can be extended to have sub classes of shape (Circle, Rectangle ..etc)
+    *
+    */
     Shape.prototype.renderShape=function(){
         switch(this.attributes.type)
         {
             case "square":
+                //create a rectangle SVG shape
                 var shape = document.createElementNS(this.svgNS,"rect");
                 shape.setAttributeNS(null,"x"    , this.attributes.x);
                 shape.setAttributeNS(null,"y"    , this.attributes.y);
@@ -71,6 +121,8 @@
                 this.svg.appendChild(shape);
             break;
             case "circle":
+                //create a circle shape
+                //defined start and end angles
                 var sA = 0;
                 var eA = 2 * Math.PI;
                 var cC = false;
@@ -102,6 +154,7 @@
             case "polygon":
                 var sides = this.attributes.sides;
                 var size = this.attributes.size;
+                //figure out points from number of sides and size.
                 var points = "";
                 points += (this.attributes.x +  this.attributes.size * Math.cos(0))+","+(this.attributes.y +  this.attributes.size *  Math.sin(0))+" ";   
                 for (var i = 1; i <= this.attributes.sides;i += 1) {
@@ -124,8 +177,11 @@
         
     }
     document.addEventListener("DOMContentLoaded", function(event) { 
+      //create a new stage with configuration props
       var stage= new Stage("canvas",stage_props.width,stage_props.height,stage_props.background);
+      //pass data to stage to parse
       stage.parse(data);
+      //render stage which will call shapes to render on stage.
       stage.render();
     });
     /*(function(){

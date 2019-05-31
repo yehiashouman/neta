@@ -11,6 +11,9 @@
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory suffix="Test.php">./tests</directory>
+            <directory suffix="Test.php">./tests/Forms</directory>
+            <directory suffix="Test.php">./tests/Rendering</directory>
+            <directory suffix="Test.php">./tests/Routes</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -19,7 +22,7 @@
         </whitelist>
     </filter>
     <php>
-        <env name="APP_ENV" value="testing"/>
+        <env name="APP_ENV" value="local"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
     </php>

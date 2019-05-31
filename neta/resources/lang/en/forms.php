@@ -22,8 +22,10 @@ return [
                     ]
             
             
+            ],
+        'validation'=>[
+                    'ShapesJSONValid'=> 'The JSON field value must be a valid shapes JSON value.'
             ]
-    
     
     ];
 

@@ -1,8 +1,13 @@
 <?php 
 namespace App\Models;
+/**
+* Trait Colorable
+* 
+* Colorable Trait provides a quick colors conversion functionality from HTML named colors to web hex colors.  
+* @package App\Models
+*/
 trait Colorable {
-
-    
+    //colors hex is an associative array that is used in colors conversion from HTML color names to hex.
     public static $colors_hex  =  array( 
                 //  Colors  as  they  are  defined  in  HTML  3.2 
                 "black"=>"#000000",
@@ -143,18 +148,24 @@ trait Colorable {
                 "whitesmoke"=>"#F5F5F5",
                 "yellowgreen"=>"#9ACD32"); 
 
-        //  GetColor  returns  an  associative  array  with  the  red,  green  and  blue 
-        //  values  of  the  desired  color 
-        public function hexToAllocatedColor($canvas,$hex)
+    /**
+    * Returns an allocated color to the image
+    * 
+    * @param $canvas is the image to which the new color will be allocated.
+    * @param $hex hex value or named value.
+    * @return A color identifier or FALSE if fails
+    */
+    public function hexToAllocatedColor($canvas,$hex)
         {
-            //check if the color provided is an html color
-            if(isset(self::$colors_hex[$hex])){
-                
-                $hex = self::$colors_hex[$hex];
-            }
-            list($r, $g, $b)= array_map(function($c){return hexdec(str_pad($c, 2, $c));}, str_split(ltrim($hex, '#'), strlen($hex) > 4 ? 2 : 1));
-            return imagecolorallocate($canvas,$r,$g,$b);
+        //check if the color provided is an html color
+        if(isset(self::$colors_hex[$hex])){
+            $hex = self::$colors_hex[$hex];
         }
+        //strips the Red, Green, Blue components of the color 
+        list($r, $g, $b)= array_map(function($c){return hexdec(str_pad($c, 2, $c));}, str_split(ltrim($hex, '#'), strlen($hex) > 4 ? 2 : 1));
+        //returns color identifier 
+        return imagecolorallocate($canvas,$r,$g,$b);
+    }
 }
         
 ?>
