@@ -1,6 +1,5 @@
 <?php
 namespace App\Models;
-use App\Models\Shape;
 use App\Models\Colorable;
 /**
 * Class Stage
@@ -51,7 +50,9 @@ class Stage {
         //parse provided shapes data
         foreach($data->shapes as $key=>$shape_data)
         {
-            $shape = new Shape();
+            $class_name = "App\\Models\\Shapes\\".ucwords($shape_data->type);
+            $shape = new $class_name();
+           // dd($shape); 
             //instruct shape to parse its own data.
             $shape->parse($shape_data);
             //add a its reference to shapes array
