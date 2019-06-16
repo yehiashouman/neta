@@ -66,14 +66,14 @@ class Shape implements ShapeInterface{
         $this->fill_color = !empty($this->fill->color)? $this->hexToAllocatedColor($this->canvas,$this->fill->color) :"";
         $this->fill_type = !empty($this->fill->type)? $this->fill->type : "solid";
         imagesetthickness($this->canvas,$this->border_width);
-        $this->renderShapes();
+        $this->renderGraphic();
         
     }
     /**
      * Renders any shape, this can be further extended to be sub classes that manage different shapes of more complex way.
      *
      */
-    protected function renderShapes()
+    protected function renderGraphic()
     {
         //implemented in sub classes
         /*
@@ -115,7 +115,7 @@ class Shape implements ShapeInterface{
         */
         
     }
-    /**
+    /** 
      * Magic setter is used to handle all attribute setting on shape class instance to be set on attributes object instead..
      *
      * @param $key the key attribute to set

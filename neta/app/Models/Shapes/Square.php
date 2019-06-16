@@ -22,7 +22,7 @@ class Square extends Shape implements ShapeInterface{
      * Renders Square.
      *
      */ 
-    protected function renderShapes()
+    protected function renderGraphic()
     {
         if($this->fill_type=="solid" ){
             imagefilledrectangle($this->canvas, $this->x, $this->y, $this->x+$this->sideLength, $this->y+$this->sideLength, $this->fill_color);

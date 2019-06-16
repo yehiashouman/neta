@@ -22,7 +22,7 @@ class Polygon extends Shape implements ShapeInterface{
      * Renders Polygon
      *
      */ 
-    protected function renderShapes()
+    protected function renderGraphic()
     {
         $points = [];
         for($a = 0;$a <= 360; $a += 360/$this->sides)

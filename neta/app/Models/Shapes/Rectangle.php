@@ -22,7 +22,7 @@ class Rectangle extends Shape implements ShapeInterface{
      * Renders Rectangle.
      *
      */ 
-    protected function renderShapes()
+    protected function renderGraphic()
     {
         if($this->fill_type=="solid" ){
             imagefilledrectangle($this->canvas, $this->x, $this->y, $this->x+$this->width, $this->y+$this->height, $this->fill_color);

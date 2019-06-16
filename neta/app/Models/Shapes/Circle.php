@@ -22,7 +22,7 @@ class Circle extends Shape implements ShapeInterface{
      * Renders Circle
      *
      */ 
-    protected function renderShapes()
+    protected function renderGraphic()
     {
         $this->width = $this->height = 2 * ($this->perimeter / (2 * pi()));
         if($this->fill_type=="solid" ){
