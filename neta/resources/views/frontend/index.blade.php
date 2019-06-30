@@ -5,6 +5,7 @@
 <h3>{{ trans("forms.instruction")}}</h2>
   
 <?php 
+//unset($_SESSION['errors']);
 $data = '{"shapes":[{"type": "polygon","x":200,"y":200,"size": 50,"sides":6,"fill":{"type":"solid","color":"blue"},"border":{"color": "yellow","width": 2}},{"type": "polygon","x":250,"y":80,"size": 80,"sides":4,"fill":{"type":"solid","color":"red"},"border":{"color": "gray","width": 3}},{"type": "polygon","x":350,"y":150,"size": 80,"sides":5,"fill":{"type":"solid","color":"black"},"border":{"color": "navy","width": 3}},{"type": "polygon","x":300,"y":300,"size": 80,"sides":3,"fill":{"type":"solid","color":"green"},"border":{"color": "fuchsia","width": 3}},{"type": "circle","x":0,"y":0,"perimeter": 300,"fill":{"type":"solid","color":"green"},"border":{"color": "red","width": 2}},{"type": "square","x":550,"y":90,"sideLength": 150,"fill":{"type":"solid","color":"blue"},"border": {"color": "#776cff","width": 2}},{"type": "rectangle","x":30,"y":250,"width": 600,"height":100,"fill":{"type":"solid","color":"red"},"border": {"color": "#ff6cff","width": 3}}]}';
 if(isset($_SESSION['errors'])){
 	$errors = $_SESSION['errors'];
@@ -17,7 +18,7 @@ if(isset($_SESSION['data'])){
 @if (isset($errors) && count($errors) > 0)
     <div class="alert alert-danger">
         <ul>
-            @foreach ($errors->all() as $error_message)
+            @foreach ($errors as $error_message)
                 <li>{{ $error_message }}</li>
             @endforeach
         </ul>
