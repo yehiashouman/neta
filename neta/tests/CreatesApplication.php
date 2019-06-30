@@ -1,8 +1,5 @@
 <?php
-
 namespace Tests;
-
-use Illuminate\Contracts\Console\Kernel;
 
 trait CreatesApplication
 {
@@ -13,13 +10,12 @@ trait CreatesApplication
      */
     public function createApplication()
     {
-        $app = require __DIR__.'/../bootstrap/app.php';
+        $app = require_once __DIR__.'/../bootstrap/app.php';
+        //if (file_exists(dirname(__DIR__).'/.env')) {
+        //    ( new \Dotenv\Dotenv(dirname(__DIR__), '.env') )->load();
+        //}
 
-        if (file_exists(dirname(__DIR__).'/.env')) {
-            ( new \Dotenv\Dotenv(dirname(__DIR__), '.env') )->load();
-        }
-
-        $app->make(Kernel::class)->bootstrap();
+        //$app->make(Kernel::class)->bootstrap();
 
         return $app;
     }
