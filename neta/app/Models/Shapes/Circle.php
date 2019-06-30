@@ -45,14 +45,14 @@ class Circle extends Shape implements ShapeInterface{
      	{
      		throw new InvalidArgumentException("Property perimeter accepts integers greater than 0.");
      	}
-     	$this->perimeter = $value;
+     	$this->_perimeter = $value;
      }
      /*
      * Getter for property perimeter
      */
      public function getPerimeter()
      {
-     	return $this->perimeter;
+     	return $this->_perimeter;
      }
 
 }
