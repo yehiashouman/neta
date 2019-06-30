@@ -8,6 +8,7 @@ use Exception;
 * @package App\Models
 */
 class Circle extends Shape implements ShapeInterface{
+    protected $_perimeter;
     /**
      * Circle Class constructor.
      *
@@ -15,23 +16,44 @@ class Circle extends Shape implements ShapeInterface{
      *
      */
     public function __construct($canvas=null){
-        parent::__construct();
+        parent::__construct($canvas);
         
     }
     /**
      * Renders Circle
      *
      */ 
-    protected function renderGraphic()
+    public function render($canvas)
     {
-        $this->width = $this->height = 2 * ($this->perimeter / (2 * pi()));
-        if($this->fill_type=="solid" ){
-            imagefilledellipse($this->canvas, $this->x+($this->width/2), $this->y+($this->height/2), $this->width,$this->height,$this->fill_color);
+        parent::render($canvas);
+        $this->_width = $this->_height = 2 * ($this->_perimeter / (2 * pi()));
+        if($this->_fill_type=="solid" ){
+            imagefilledellipse($this->_canvas, $this->_x+($this->_width/2), $this->_y+($this->_height/2), $this->_width,$this->_height,$this->_fill_color);
         }
-        imageellipse($this->canvas, $this->x+($this->width/2), $this->y+($this->height/2), $this->width,$this->height,$this->border_color);
+        imageellipse($this->_canvas, $this->_x+($this->_width/2), $this->_y+($this->_height/2), $this->_width,$this->_height,$this->_border_color);
                 
         
     }
+    /*
+     * Setter for property perimeter
+     *
+     * @param $value new value for property
+     */
+     public function setPerimeter($value)
+     {
+     	if (!(is_int($value) || ctype_digit($value)) || !((int)$value >= 0))  
+     	{
+     		throw new InvalidArgumentException("Property perimeter accepts integers greater than 0.");
+     	}
+     	$this->perimeter = $value;
+     }
+     /*
+     * Getter for property perimeter
+     */
+     public function getPerimeter()
+     {
+     	return $this->perimeter;
+     }
 
 }
 ?>

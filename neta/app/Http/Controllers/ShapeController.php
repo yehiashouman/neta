@@ -35,7 +35,7 @@ class ShapeController extends Controller
         //if it fails redirect back with errors and original invalid json data, 
         //the reason it is done this way is that Lumen does not support flash error messages or sessions
         if ($validator->fails()) {
-            $_SESSION['errors'] = $validator->getMessageBag();
+            $_SESSION['errors'] = $validator->getMessageBag()->all();
             $_SESSION['data']= $raw_data;
                 return redirect()->route("shapes.index");
         }
@@ -69,6 +69,20 @@ class ShapeController extends Controller
                             $stage = new Stage($stage_props);
                             $stage->parse($data);
                             $stage->render();
+                            $errors_messages = [];
+                            //dd($stage->errors);
+                            if(count($stage->errors)>0)
+                            {
+                                foreach($stage->errors as $idx=>$e)
+                                {
+                                    array_push($errors_messages, $e->getMessage());                                
+                                       
+                                }
+                                $_SESSION['errors']= collect($errors_messages);
+                                $_SESSION['data']= $raw_data;
+                                return redirect()->route("shapes.index");
+
+                            }
                             //use the server side rendering view which has nothing but the exported image
                             return response(view($view_template,["img"=> $stage->export($format)]));
                         } else{

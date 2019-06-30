@@ -8,6 +8,7 @@ use Exception;
 * @package App\Models
 */
 class Square extends Shape implements ShapeInterface{
+    protected $_sideLength;
     /**
      * Square Class constructor.
      *
@@ -15,21 +16,42 @@ class Square extends Shape implements ShapeInterface{
      *
      */
     public function __construct($canvas=null){
-        parent::__construct();
+        parent::__construct($canvas);
         
     }
     /**
      * Renders Square.
      *
      */ 
-    protected function renderGraphic()
+    public function render($canvas)
     {
-        if($this->fill_type=="solid" ){
-            imagefilledrectangle($this->canvas, $this->x, $this->y, $this->x+$this->sideLength, $this->y+$this->sideLength, $this->fill_color);
+        parent::render($canvas);
+        if($this->_fill_type=="solid" ){
+            imagefilledrectangle($this->_canvas, $this->_x, $this->_y, $this->_x+$this->_sideLength, $this->_y+$this->_sideLength, $this->_fill_color);
         }
-        imagerectangle($this->canvas, $this->x, $this->y, $this->x+$this->sideLength, $this->y+$this->sideLength, $this->border_color);
-        $this->width = $this->height = $this->sideLength;
+        imagerectangle($this->_canvas, $this->_x, $this->_y, $this->_x+$this->_sideLength, $this->_y+$this->_sideLength, $this->_border_color);
+        $this->_width = $this->_height = $this->_sideLength;
     }
+    /*
+     * Setter for property sideLength
+     *
+     * @param $value new value for property
+     */
+     public function setSideLength($value)
+     {
+       if (! ( (is_int($value) || ctype_digit($value)) && (int)$value >= 0))  
+     	{
+     		throw new InvalidArgumentException("Property sideLength accepts integers greater than 0.");
+     	}
+     	$this->_sideLength = $value;
+     }
+     /*
+     * Getter for property sideLength
+     */
+     public function getSideLength()
+     {
+     	return $this->_sideLength;
+     }
 
 }
 ?>

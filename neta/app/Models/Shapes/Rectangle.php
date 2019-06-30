@@ -8,6 +8,7 @@ use Exception;
 * @package App\Models
 */
 class Rectangle extends Shape implements ShapeInterface{
+    
     /**
      * Rectangle Class constructor.
      *
@@ -15,19 +16,20 @@ class Rectangle extends Shape implements ShapeInterface{
      *
      */
     public function __construct($canvas=null){
-        parent::__construct();
+        parent::__construct($canvas);
         
     }
     /**
      * Renders Rectangle.
      *
      */ 
-    protected function renderGraphic()
+    public function render($canvas)
     {
-        if($this->fill_type=="solid" ){
-            imagefilledrectangle($this->canvas, $this->x, $this->y, $this->x+$this->width, $this->y+$this->height, $this->fill_color);
+        parent::render($canvas);
+        if($this->_fill_type=="solid" ){
+            imagefilledrectangle($this->_canvas, $this->_x, $this->_y, $this->_x+$this->_width, $this->_y+$this->_height, $this->_fill_color);
         }
-        imagerectangle($this->canvas, $this->x, $this->y, $this->x+$this->width, $this->y+$this->height, $this->border_color);
+        imagerectangle($this->_canvas, $this->_x, $this->_y, $this->_x+$this->_width, $this->_y+$this->_height, $this->_border_color);
        
     }
 

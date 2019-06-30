@@ -1,7 +1,9 @@
 <?php 
 namespace App\Models\Shapes;
 use Exception;
-use App\Models\Colorable;
+use InvalidArgumentException;
+use App\Models\Traits\Colorable;
+use App\Models\Traits\Displayable;
 /**
 * Class Shape
 * 
@@ -11,19 +13,23 @@ use App\Models\Colorable;
 class Shape implements ShapeInterface{
     //uses colorable for hex/color names conversions.
     use Colorable;
-    protected $canvas;
+    use Displayable;
+    protected $_border_width,$_border_color;
+    protected $_fill_type,$_fill_color;
+    protected $_fill,$_border;
+    protected $_type;
     //defined default attributes for any shape
-    const DEFAULT_ATTRIBS = [
-                'x'=> 0,
-                'y'=> 0,
-                'border'=> array('color'=>'#000','width'=>1),
-                'fill'=> array('color'=>'','type'=>'solid'),
-                'width'=>0,
-                'height'=>0,
-                'type'=>'',    
+    private $DEFAULT_ATTRIBS = [
+                '_x'=> 0,
+                '_y'=> 0,
+                '_border'=> array('color'=>'#000','width'=>1),
+                '_fill'=> array('color'=>'','type'=>'solid'),
+                '_width'=>0,
+                '_height'=>0,
+                '_type'=>'',    
         ];
     //this is the attributes objects where all the properties will be stored.
-    protected $attributes;
+    //protected $attributes;
     /**
      * Shape Class constructor.
      *
@@ -31,7 +37,12 @@ class Shape implements ShapeInterface{
      *
      */
     public function __construct($canvas=null){
-        $this->attributes = self::DEFAULT_ATTRIBS;
+        //$this->attributes = self::DEFAULT_ATTRIBS;
+        foreach($this->DEFAULT_ATTRIBS as $key=>$val)
+        {
+            $this->$key =$val;
+            
+        }
         $this->canvas = $canvas;
     }
     /**
@@ -45,6 +56,7 @@ class Shape implements ShapeInterface{
     {
         foreach($data as $key=>$value)
         {
+            
             $this->$key = $value;   
         }
         
@@ -60,85 +72,73 @@ class Shape implements ShapeInterface{
                     throw new Exception("CanvasNotFoundException");
                     
         }
-        $this->canvas = $canvas;
-        $this->border_color = $this->hexToAllocatedColor($this->canvas,$this->border->color);
-        $this->border_width = isset($this->border->width)?$this->border->width : 1;
-        $this->fill_color = !empty($this->fill->color)? $this->hexToAllocatedColor($this->canvas,$this->fill->color) :"";
-        $this->fill_type = !empty($this->fill->type)? $this->fill->type : "solid";
-        imagesetthickness($this->canvas,$this->border_width);
-        $this->renderGraphic();
+        $this->_canvas = $canvas;
+        $this->_border_color = $this->hexToAllocatedColor($this->_canvas,$this->_border->color);
+        $this->_border_width = isset($this->_border->width)?$this->_border->width : 1;
+        $this->_fill_color = !empty($this->_fill->color)? $this->hexToAllocatedColor($this->_canvas,$this->_fill->color) :"";
+        $this->_fill_type = !empty($this->_fill->type)? $this->_fill->type : "solid";
+        imagesetthickness($this->_canvas,$this->_border_width);
         
     }
-    /**
-     * Renders any shape, this can be further extended to be sub classes that manage different shapes of more complex way.
+
+     
+     /*
+     * Setter for property type
      *
+     * @param $value new value for property
      */
-    protected function renderGraphic()
-    {
-        //implemented in sub classes
-        /*
-        switch($this->type)
-        {
-            case "circle":
-                $this->width = $this->height = 2 * ($this->perimeter / (2 * pi()));
-                if($this->fill_type=="solid" ){
-                    imagefilledellipse($this->canvas, $this->x+($this->width/2), $this->y+($this->height/2), $this->width,$this->height,$this->fill_color);
-                }
-                imageellipse($this->canvas, $this->x+($this->width/2), $this->y+($this->height/2), $this->width,$this->height,$this->border_color);
-                break;
-            case "rectangle":
-                if($this->fill_type=="solid" ){
-                    imagefilledrectangle($this->canvas, $this->x, $this->y, $this->x+$this->width, $this->y+$this->height, $this->fill_color);
-                }
-                imagerectangle($this->canvas, $this->x, $this->y, $this->x+$this->width, $this->y+$this->height, $this->border_color);
-                break;
-            case "square":
-                if($this->fill_type=="solid" ){
-                    imagefilledrectangle($this->canvas, $this->x, $this->y, $this->x+$this->sideLength, $this->y+$this->sideLength, $this->fill_color);
-                }
-                imagerectangle($this->canvas, $this->x, $this->y, $this->x+$this->sideLength, $this->y+$this->sideLength, $this->border_color);
-                $this->width = $this->height = $this->sideLength;
-            break;
-            case "polygon":
-                $points = [];
-                for($a = 0;$a <= 360; $a += 360/$this->sides)
-                {
-                    $points[] = $this->x + ($this->size) * cos(deg2rad($a));
-                    $points[] = $this->y + ($this->size) * sin(deg2rad($a));
-                }
-                if($this->fill_type=="solid" ){
-                    imagefilledpolygon($this->canvas,$points,$this->sides,$this->fill_color);
-                }
-                imagepolygon($this->canvas,$points,$this->sides,$this->border_color);
-            break;
-        }
-        */
+     public function setType($value)
+     {
+     	if (!is_string($value)) 
+     	{
+     		throw new InvalidArgumentException("Property Type must be of type string.");
+     	}
+     	$this->_type = $value;
+     }
+     /*
+     * Getter for property type
+     */
+     public function getType()
+     {
+     	return $this->_type;
+     }
+     
+     public function setBorder($value)
+     {
         
-    }
-    /** 
-     * Magic setter is used to handle all attribute setting on shape class instance to be set on attributes object instead..
-     *
-     * @param $key the key attribute to set
-     * @param $value the value of the attribute to set
-     */
-     function __set($key, $val) {
-         $this->attributes[$key]=$val;
-         
+     	if (!is_object($value) || !(array_key_exists("color",$value) ||  array_key_exists("width",$value)) ) 
+     	{
+     		throw new InvalidArgumentException("Property border accepts an array with color and width as keys.");
+     	}
+     	$this->_border = $value;
      }
-    /**
-     * Magic getter is used to handle all attribute getting from a shape instance to be get from attributes object instead..
-     *
-     * @param $key the key attribute to get
+     /*
+     * Getter for property border
      */
-     function __get($key){
-         if(isset($this->attributes[$key]))
-         {
-             return $this->attributes[$key];
-             
-         }else{
-             
-             throw new Exception("Property '".$key."' not found on Shape Array");
-         }
+     public function getBorder()
+     {
+     	return $this->_border;
      }
+     /*
+     * Setter for property fill
+     *
+     * @param $value new value for property
+     */
+     public function setFill($value)
+     {
+       	if (!is_object($value) || !(array_key_exists("color",$value) ||  array_key_exists("type",$value)) ) 
+     	{
+     		throw new InvalidArgumentException("Property fill accepts an array with color and type as keys.");
+     	}
+     	$this->_fill = $value;
+     }
+     /*
+     * Getter for property fill
+     */
+     public function getFill()
+     {
+     	return $this->_fill;
+     }
+     
 }
 ?>
